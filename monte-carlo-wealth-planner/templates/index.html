@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wealth Outcome Simulator</title>
+</head>
+<body>
+    <h1>How much could your money be worth?</h1>
+
+    <form method="post">
+        <p>
+            <label for="initial">Starting savings (£)</label><br>
+            <input type="number" id="initial" name="initial"
+                   value="{{ results.initial if results else 10000 }}"
+                   step="0.01" required>
+        </p>
+
+        <p>
+            <label for="contribution">Monthly investment (£)</label><br>
+            <input type="number" id="contribution" name="contribution"
+                   value="{{ results.contribution if results else 200 }}"
+                   step="0.01" required>
+        </p>
+
+        <p>
+            <label for="years">Time horizon (years)</label><br>
+            <input type="number" id="years" name="years"
+                   value="{{ results.years if results else 30 }}"
+                   min="1" required>
+        </p>
+
+        <button type="submit">Simulate future wealth</button>
+    </form>
+
+    {% if results %}
+    <h2>Your possible outcomes</h2>
+
+    <p>Median outcome: £{{ "{:,.0f}".format(results.median) }}</p>
+    <p>10th percentile (bad case): £{{ "{:,.0f}".format(results.p10) }}</p>
+    <p>90th percentile (good case): £{{ "{:,.0f}".format(results.p90) }}</p>
+
+    <img src="data:image/png;base64,{{ results.histogram_b64 }}" alt="Simulation histogram">
+    {% endif %}
+</body>
+</html>
